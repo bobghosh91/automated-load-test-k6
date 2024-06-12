@@ -9,5 +9,5 @@ export const options = {
 export default function(){
 
     http.get('https://uat.phactmi.org/search');
-    sleep(1)
+    sleep(2)
 }
