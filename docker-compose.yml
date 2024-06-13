@@ -6,6 +6,7 @@ services:
       - ./script.js:/workspace/script.js
     working_dir: /workspace
     entrypoint: ["k6", "run", "/workspace/script.js"]
+    detach: true
 
   k6-script2:
     image: grafana/k6
@@ -13,3 +14,4 @@ services:
       - ./first-script.js:/workspace/first-script.js
     working_dir: /workspace
     entrypoint: ["k6", "run", "/workspace/first-script.js"]
+    detach: true
