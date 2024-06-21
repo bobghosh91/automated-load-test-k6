@@ -1,1 +1,3 @@
 new-recording_*.har
+/assets/**
+reports/summary.html
