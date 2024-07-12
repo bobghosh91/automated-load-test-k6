@@ -1,5 +1,5 @@
 #using bash
-# K6_BROWSER_HEADLESS=false BASE_URL='https://reqres.in/api' k6 run http_req.js
+# K6_BROWSER_HEADLESS=false BASE_URL='https://www.phactmi.org' k6 run script_browser.js
 
 # docker run -i --rm -v .:/scripts -w /scripts grafana/k6:0.51.0-with-browser run /scripts/script.js
 

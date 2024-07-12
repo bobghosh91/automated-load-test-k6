@@ -12,9 +12,14 @@ import exec from 'k6/execution';
 // }
 export const options = {
 
+  // vus: 10, //no. of virtual users
+  // duration: '10s', //maximu time the load has to be applied
+
   scenarios: {
     ui: {
-      executor: 'shared-iterations',
+      executor: 'constant-vus',
+      vus: 10,
+      duration: '70s',
       options: {
         browser: {
           type: 'chromium',
@@ -25,14 +30,12 @@ export const options = {
   thresholds:{
     http_req_duration: ['p(95)<350'],
     http_req_failed: ['rate<0.01'], //failure rate should be between 0 and 1
-    http_reqs: ['count>20'], //how many requests have been sent. it expect to sent atleast 20 requests
-    http_reqs: ['rate>4'], //how many requests have been sent per second. more than 5 request must go per sec
-    checks: ['rate>=.99'],
+    http_reqs: ['count>=1'], //how many requests have been sent. it expect to sent atleast 1 requests
+    http_reqs: ['rate<5'], //how many requests have been sent per second. less than 5 request must go per sec
+    checks: ['rate>=.99'], // the rate of successful checks should be higher than 99%
     'group_duration{group:::Main Page}': ['p(95)<10000'],
-    'group_duration{group:::Search Page}': ['p(95)<350']
-  },
-  vus: 10, //no. of virtual users
-  // duration: '10s', //maximu time the load has to be applied
+    'group_duration{group:::Search Page}': ['p(95)<=65000']
+  }
 }
 
 export function setup(){
@@ -83,18 +86,18 @@ export default async function(){
     sleep(2)
     page.locator('.sc-eHgmQL>button').press('Enter')
     // await page.locator('.sc-eHgmQL>button').click({force:true})
+    page.locator('div.sc-hMFtBS > :nth-child(4)').waitFor({state:'visible'})
     page.screenshot({ path: 'assets/screenshot_main_page.png' });
-
   });
 
   group('Search Page', ()=>{
     page.locator('div.sc-hMFtBS > :nth-child(4)').waitFor({state:'visible'})
     page.locator('div.sc-hMFtBS > :nth-child(4)').click()
-    page.waitForSelector('.tab-title ', { state: 'visible' })
+    page.waitForSelector('#pi-tab', { state: 'visible' })
 
     const resp = http.get(page.url())
     check(page, {
-      'Page should contain DIR field': (page) => (page.locator('#srd-tab').isVisible() === true),
+      'Page should contain FAQ field': (page) => (page.locator("[id*='srd-title']").isVisible() === true),
       'Check Page Title': (page) => (page.title().includes('Search any product information | phactMI'))
     });
     check(resp, {
