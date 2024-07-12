@@ -29,3 +29,15 @@ export default function(){
 
 }
 
+// export default function () {
+
+//     //only applicable for APIs
+//     let res = http.get(__ENV.BASE_URL+'/users?page=2');
+//     const crocodiles = res.json();
+//     console.log(crocodiles['per_page'])
+
+//     //headers "Content-Type":"application/json
+//     console.log(res.headers['Content-Type'])
+//     console.log(__ENV.BASE_URL)
+
+// }
